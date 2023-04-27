@@ -1,0 +1,165 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+void Menu()
+{
+
+    int choice;
+
+    do
+    {
+        cout << "************************************************************************************\n";
+        cout << "Enter a choice from the below options please: " << endl;
+        cout << "1.Su siralamasi Bulmacasi\n2. Hafiza Oyunu\n3. Connect4\n4.Adam Asmaca\n5.Back to Menu\n6.Exit" << endl;
+        cin >> choice;
+        cout << "************************************************************************************\n";
+
+        switch (choice)
+        {
+
+        case 1:
+
+            cout << "You have chosen Su siralamasi Bulmacasi\n ";
+            break;
+        case 2:
+
+            cout << "You have chosen Hafiza Oyunu\n";
+            break;
+
+        case 3:
+
+            cout << "You have chosen Connect4\n";
+            break;
+
+        case 4:
+
+            cout << "You have chosen Adam Asmaca" << endl;
+            break;
+
+        case 5:
+
+            cout << "Backed to Menu" << endl;
+            Menu();
+
+        case 6:
+            cout << "Exit\n";
+            break;
+
+        default:
+            cout << choice << " is not a valid menu itme ." << endl;
+
+
+        }
+
+    } while (choice != 4);
+
+
+
+}
+
+// List of words to choose from
+std::vector<std::string> words = { "HANGMAN", "COMPUTER", "PROGRAMMING", "DEBUGGING", "CODING" };
+
+// Function to draw the hangman based on the number of incorrect guesses
+
+void drawHangman(int incorrectGuesses) {
+
+    std::cout << " _________ \n";
+    std::cout << "| | \n";
+    if (incorrectGuesses > 0) std::cout << "| O \n";
+    if (incorrectGuesses > 1) std::cout << "| /|\\ \n";
+    if (incorrectGuesses > 2) std::cout << "| / \\ \n";
+    std::cout << "| \n";
+    std::cout << "| \n";
+    std::cout << "|___ \n";
+}
+
+// Function to display the current state of the word (closed and open letters)
+
+void displayWord(std::string word, std::vector<char> guessedLetters) {
+    std::cout << "\nWord: ";
+    for (char letter : word) {
+        if (std::find(guessedLetters.begin(), guessedLetters.end(), letter) != guessedLetters.end()) {
+            std::cout << letter << " ";
+        }
+        else {
+            std::cout << "_ ";
+        }
+    }
+}
+
+// Function to check if the game is over (all letters guessed or too many incorrect guesses)
+
+bool isGameOver(std::string word, std::vector<char> guessedLetters, int incorrectGuesses) {
+    if (incorrectGuesses >= 3) {
+        drawHangman(incorrectGuesses);
+        std::cout << "\nYou have lost the game! The word was: " << word << std::endl;
+        return true;
+    }
+    bool allLettersGuessed = true;
+    for (char letter : word) {
+        if (std::find(guessedLetters.begin(), guessedLetters.end(), letter) == guessedLetters.end()) {
+            allLettersGuessed = false;
+            break;
+        }
+    }
+    if (allLettersGuessed) {
+        drawHangman(incorrectGuesses);
+        std::cout << "\nCongratulations, you have guessed the word!" << std::endl;
+        return true;
+    }
+    return false;
+}
+
+int main() {
+
+
+
+    Menu();
+
+
+    srand(time(NULL));
+    std::string word = words[rand() % words.size()];
+
+    int incorrectGuesses = 0;
+
+    std::vector<char> guessedLetters;
+
+    while (!isGameOver(word, guessedLetters, incorrectGuesses)) {
+        drawHangman(incorrectGuesses);
+        displayWord(word, guessedLetters);
+
+        // Ask for user input
+
+        std::cout << "\n\nGuess a letter: ";
+        char letter;
+        std::cin >> letter;
+
+        // Check if the letter has already been guessed
+
+        if (std::find(guessedLetters.begin(), guessedLetters.end(), letter) != guessedLetters.end()) {
+            std::cout << "\nYou already guessed that letter. Try again." << std::endl;
+            continue;
+        }
+
+        // Add the letter to the list of guessed letters
+
+        guessedLetters.push_back(letter);
+
+        // Check if the letter is in the word
+
+        if (std::count(word.begin(), word.end(), letter) > 0) {
+            std::cout << "\nGood guess!" << std::endl;
+        }
+        else {
+            std::cout << "\nBad guess." << std::endl;
+            incorrectGuesses++;
+        }
+
+    }
+
+    return 0;
+}
