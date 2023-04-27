@@ -1,2 +1,2 @@
 # HangMan-in-Cpp
-HangMan in C++ Programming
+in this repository im gonna  write HangMan's code in C++ Programming language,
